@@ -22,8 +22,8 @@ import (
 	"k8s.io/client-go/kubernetes"
 	client "k8s.io/client-go/kubernetes/typed/networking/v1beta1"
 	"k8s.io/ingress-gce/pkg/utils/patch"
+	"k8s.io/ingress-gce/pkg/utils/slice"
 	"k8s.io/klog"
-	"k8s.io/kubernetes/pkg/util/slice"
 )
 
 const (
@@ -58,7 +58,7 @@ func HasFinalizer(m meta_v1.ObjectMeta) bool {
 
 // HasGivenFinalizer is true if the passed in meta has the specified finalizer.
 func HasGivenFinalizer(m meta_v1.ObjectMeta, key string) bool {
-	return slice.ContainsString(m.Finalizers, key, nil)
+	return slice.ContainsString(m.Finalizers, key)
 }
 
 // EnsureFinalizer ensures that the specified finalizer exists on given Ingress.

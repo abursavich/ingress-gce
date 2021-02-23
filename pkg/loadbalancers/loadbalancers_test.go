@@ -45,7 +45,7 @@ import (
 	"k8s.io/ingress-gce/pkg/utils"
 	"k8s.io/ingress-gce/pkg/utils/common"
 	namer_util "k8s.io/ingress-gce/pkg/utils/namer"
-	"k8s.io/kubernetes/pkg/util/slice"
+	"k8s.io/ingress-gce/pkg/utils/slice"
 	"k8s.io/legacy-cloud-providers/gce"
 )
 
@@ -1471,7 +1471,7 @@ func TestList(t *testing.T) {
 	expected := []string{"k8s-um-namespace1-test--uid1", "k8s-um-old-l7--uid1"}
 
 	for _, name := range expected {
-		if !slice.ContainsString(umNames, name, nil) {
+		if !slice.ContainsString(umNames, name) {
 			t.Fatalf("j.pool.List(%q, %q) returned names %v, want %v", key, defaultVersion, umNames, expected)
 		}
 	}

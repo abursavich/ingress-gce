@@ -24,7 +24,7 @@ import (
 	"k8s.io/api/networking/v1beta1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes/fake"
-	"k8s.io/kubernetes/pkg/util/slice"
+	"k8s.io/ingress-gce/pkg/utils/slice"
 )
 
 func TestStrategicMergePatchBytes(t *testing.T) {
@@ -149,7 +149,7 @@ func TestPatchServiceObjectMetadata(t *testing.T) {
 			svc:  newTestService("ns5", "delete-finalizer-svc"),
 			newMetaFunc: func(svc *apiv1.Service) *apiv1.Service {
 				ret := svc.DeepCopy()
-				ret.Finalizers = slice.RemoveString(ret.Finalizers, testFinalizer, nil)
+				ret.Finalizers = slice.RemoveString(ret.Finalizers, testFinalizer)
 				return ret
 			},
 		},

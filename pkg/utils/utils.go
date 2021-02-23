@@ -40,8 +40,8 @@ import (
 	"k8s.io/ingress-gce/pkg/annotations"
 	"k8s.io/ingress-gce/pkg/flags"
 	"k8s.io/ingress-gce/pkg/utils/common"
+	"k8s.io/ingress-gce/pkg/utils/slice"
 	"k8s.io/klog"
-	"k8s.io/kubernetes/pkg/util/slice"
 )
 
 const (
@@ -577,7 +577,7 @@ func TranslateAffinityType(affinityType string) string {
 
 // IsLegacyL4ILBService returns true if the given LoadBalancer service is managed by service controller.
 func IsLegacyL4ILBService(svc *api_v1.Service) bool {
-	return slice.ContainsString(svc.ObjectMeta.Finalizers, common.LegacyILBFinalizer, nil)
+	return slice.ContainsString(svc.ObjectMeta.Finalizers, common.LegacyILBFinalizer)
 }
 
 // L4ILBResourceDescription stores the description fields for L4 ILB resources.

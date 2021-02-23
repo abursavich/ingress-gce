@@ -25,7 +25,7 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/util/intstr"
 	"k8s.io/client-go/kubernetes/fake"
-	"k8s.io/kubernetes/pkg/util/slice"
+	"k8s.io/ingress-gce/pkg/utils/slice"
 )
 
 func TestPatchIngressObjectMetadata(t *testing.T) {
@@ -75,7 +75,7 @@ func TestPatchIngressObjectMetadata(t *testing.T) {
 			ing:  newTestIngress("ns5", "delete-finalizer-ing"),
 			newMetaFunc: func(ing *v1beta1.Ingress) *v1beta1.Ingress {
 				ret := ing.DeepCopy()
-				ret.Finalizers = slice.RemoveString(ret.Finalizers, testFinalizer, nil)
+				ret.Finalizers = slice.RemoveString(ret.Finalizers, testFinalizer)
 				return ret
 			},
 		},
