@@ -20,6 +20,7 @@ import (
 	"fmt"
 	"reflect"
 	"sync"
+	"time"
 
 	"github.com/GoogleCloudPlatform/k8s-cloud-provider/pkg/cloud/meta"
 	v1 "k8s.io/api/core/v1"
@@ -39,8 +40,6 @@ import (
 	"k8s.io/ingress-gce/pkg/utils/namer"
 	"k8s.io/ingress-gce/pkg/utils/patch"
 	"k8s.io/klog"
-	"k8s.io/kubernetes/pkg/apis/core/v1/helper"
-	"time"
 )
 
 const (
@@ -311,10 +310,30 @@ func (l4c *L4Controller) sync(key string) error {
 }
 
 func (l4c *L4Controller) updateServiceStatus(svc *v1.Service, newStatus *v1.LoadBalancerStatus) error {
-	if helper.LoadBalancerStatusEqual(&svc.Status.LoadBalancer, newStatus) {
+	if loadBalancerStatusEqual(&svc.Status.LoadBalancer, newStatus) {
 		return nil
 	}
 	return patch.PatchServiceLoadBalancerStatus(l4c.ctx.KubeClient.CoreV1(), svc, *newStatus)
+}
+
+func loadBalancerStatusEqual(l, r *v1.LoadBalancerStatus) bool {
+	return ingressSliceEqual(l.Ingress, r.Ingress)
+}
+
+func ingressSliceEqual(lhs, rhs []v1.LoadBalancerIngress) bool {
+	if len(lhs) != len(rhs) {
+		return false
+	}
+	for i := range lhs {
+		if !ingressEqual(&lhs[i], &rhs[i]) {
+			return false
+		}
+	}
+	return true
+}
+
+func ingressEqual(lhs, rhs *v1.LoadBalancerIngress) bool {
+	return lhs.IP == rhs.IP && lhs.Hostname == rhs.Hostname
 }
 
 func (l4c *L4Controller) updateAnnotations(svc *v1.Service, newILBAnnotations map[string]string) error {
